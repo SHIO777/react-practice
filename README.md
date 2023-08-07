@@ -2,6 +2,24 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## 参考サイト
+
+[2021 年版・爆速 React プロジェクトの作り方(create-react-app を使用)](https://qiita.com/taskooh/items/f67d34f9f5c8eab08dc0)
+
+```
+# npm 経由でyarnをインストール
+npm install -g yarn
+# yarnのバージョンを確認
+yarn -v
+
+yarn create react-app react-practice
+#プロジェクトディレクトリへ移動
+cd react-practice
+
+yarn start
+
+```
+
 ## Available Scripts
 
 In the project directory, you can run:

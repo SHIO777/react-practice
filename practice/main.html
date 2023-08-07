@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Console.log 結果表示</title>
+</head>
+
+<body>
+    <h1>Console.log 結果</h1>
+    <div id="logOutput"></div>
+    <div id="email"></div>
+
+    <script>
+        // console.logの内容を保存する配列を作成
+        var logMessages = [];
+
+        // console.logをオーバーライドして、ログを保存する関数にする
+        console.log = function (message) {
+            logMessages.push(message);
+            displayLogMessage(message);
+        };
+
+        // ログの内容をHTML上に表示する関数
+        function displayLogMessage(message) {
+            var logOutputDiv = document.getElementById('logOutput');
+            var logMessageElement = document.createElement('p');
+            logMessageElement.textContent = message;
+            logOutputDiv.appendChild(logMessageElement);
+        }
+
+        // 画面がタップ（クリック）されたときにリロードする関数
+        function reloadOnTap() {
+            location.reload();
+        }
+
+        // 画面がタップ（クリック）されたときにreloadOnTap関数を呼び出す
+        document.addEventListener('click', reloadOnTap);
+
+        // console.log("test");
+    </script>
+    <script src="practice.js"></script>
+</body>
+
+
+
+</html>

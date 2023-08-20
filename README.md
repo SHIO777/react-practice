@@ -4,6 +4,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## 参考サイト
 
+[React ハンズオンラーニング](https://github.com/oreilly-japan/learning-react-2e-ja)
+
 [2021 年版・爆速 React プロジェクトの作り方(create-react-app を使用)](https://qiita.com/taskooh/items/f67d34f9f5c8eab08dc0)
 
 ```

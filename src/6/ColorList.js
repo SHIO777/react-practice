@@ -26,7 +26,7 @@ export default function colorList({
             {
                 colors.map(color =>
                     <Color
-                        key={color.id}
+                        // key={color.id}
                         {...color}
                         onRemove={onRemoveColor}
                         onRate={onRateColor}

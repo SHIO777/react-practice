@@ -6,6 +6,8 @@ const SearchApp = () => {
     const [currentIndex, setCurrentIndex] = useState(0)
     const containerRef = useRef(null);
 
+    const highlightNumRef = useRef(0)
+
     const data = useMemo(() => [
         "Hello my name is is",
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
@@ -111,16 +113,20 @@ const SearchApp = () => {
     var highlightNum = 0;
     var currentHighlightNum = 0;
 
-    const highlightText = useCallback((text, query) => {
+    const highlightText = (text, query) => {
         if (!query) return text;
 
         const parts = text.split(new RegExp(`(${query})`, "gi"))
+        // let currentHighlightNum;
 
         return parts.map((part, index) => {
             const isHighlightWord = part.toLowerCase() === query.toLowerCase();
             if (isHighlightWord) {
                 currentHighlightNum = highlightNum
                 highlightNum += 1;
+                // currentHighlightNum = highlightNumRef.current;
+                // highlightNumRef.current = highlightNumRef.current + 1;
+                // console.log(currentHighlightNum)
             }
 
             if (isHighlightWord) {
@@ -133,7 +139,7 @@ const SearchApp = () => {
                 return part
             }
         })
-    }, [currentIndex])
+    }
 
     const handleArrowClick = useCallback((direction) => {
         if (hits > 1) {
@@ -160,6 +166,7 @@ const SearchApp = () => {
                     behavior: "smooth",
                 });
             }
+            console.log(currentIndex);
         }
     }, [currentIndex]);
 

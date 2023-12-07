@@ -51,30 +51,6 @@ const SearchApp = () => {
         // setCurrentIndex(0)
     }
 
-    const highlightText = (text, query) => {
-        let highlightNum = 0;
-        if (!query) return text;
-        const parts = text.split(new RegExp(`(${query})`, "gi"))
-        console.log(parts)
-
-        return parts.map((part, index) => {
-            const isHighlightWord = part.toLowerCase() === query.toLowerCase();
-            const highlight = highlightIndex
-
-            if (isHighlightWord) {
-                setHighlightIndex(highlightIndex+1)
-            }
-
-            return isHighlightWord ? (
-                <mark key={index} style={{ background: (highlight) === currentIndex ? "orange" : "yellow" }}>
-                {part}
-            </mark>
-            ) : (
-            part
-            );
-        });
-
-
     // const highlightText = (text, query) => {
     //     let highlightNum = 0;
     //     if (!query) return text;
@@ -86,20 +62,44 @@ const SearchApp = () => {
     //         const highlight = highlightIndex
 
     //         if (isHighlightWord) {
-    //             highlightNum += 1;
-    //             // setHighlightIndex(highlightIndex+1)
+    //             setHighlightIndex(highlightIndex+1)
     //         }
 
     //         return isHighlightWord ? (
-    //             // <mark key={index} style={{ background: (highlight) === currentIndex ? "orange" : "yellow" }}>
-    //             <mark key={index} style={{ background: (highlightNum) === currentIndex ? "orange" : "yellow" }}>
-    //             {/* {(highlight)} */}
+    //             <mark key={index} style={{ background: (highlight) === currentIndex ? "orange" : "yellow" }}>
     //             {part}
     //         </mark>
     //         ) : (
     //         part
     //         );
     //     });
+
+
+    const highlightText = (text, query) => {
+        let highlightNum = 0;
+        if (!query) return text;
+        const parts = text.split(new RegExp(`(${query})`, "gi"))
+        console.log(parts)
+
+        return parts.map((part, index) => {
+            const isHighlightWord = part.toLowerCase() === query.toLowerCase();
+            const highlight = highlightIndex
+
+            if (isHighlightWord) {
+                highlightNum += 1;
+                // setHighlightIndex(highlightIndex+1)
+            }
+
+            return isHighlightWord ? (
+                // <mark key={index} style={{ background: (highlight) === currentIndex ? "orange" : "yellow" }}>
+                <mark key={index} style={{ background: (highlightNum) === currentIndex ? "orange" : "yellow" }}>
+                {/* {(highlight)} */}
+                {part}
+            </mark>
+            ) : (
+            part
+            );
+        });
 
 
         // return parts.map((part, index) =>
@@ -128,21 +128,18 @@ const SearchApp = () => {
     }
 
     return (
-        <div style={{ textAlign: "center", margin: "50px" }}>
-            {/* {hits > 1 && ( */}
-            <div style={{ margin: "50px" }}>
-                    <button onClick={() => handleArrowClick("prev")}>Previous</button>
-                    <button onClick={() => handleArrowClick("next")}>Next</button>
-                </div>
-            {/* )} */}
+        <div style={{ textAlign: "center", marginTop: "50px" }}>
             <input
                 type="text"
                 placeholder="Search..."
                 value={input}
                 onChange={handleInputChange}
             />
+            <div style={{ marginBottom: "50px" }}>
+                <button onClick={() => handleArrowClick("prev")}>Previous</button>
+                <button onClick={() => handleArrowClick("next")}>Next</button>
+            </div>
             <div>
-                {/* <p>Results: {hits}</p> */}
                 {hits > 0 && (
                 <p>
                     Hits: {currentIndex + 1}/{hits}

@@ -121,19 +121,6 @@ const SearchApp = () => {
                 highlightNum += 1;
             }
 
-            if (isHighlightWord && currentHighlightNum === currentIndex) {
-                // スクロール
-                if (containerRef.current) {
-                    const targetWord = containerRef.current.querySelector(`#word-${currentIndex}`);
-                    if (targetWord) {
-                        containerRef.current.scrollTo({
-                            top: containerRef.current.scrollTop + targetWord.offsetTop,
-                            behavior: "smooth",
-                        });
-                    }
-                }
-            }
-
             if (isHighlightWord) {
                 return (
                     <mark key={index} id={`word-${currentHighlightNum}`} style={{ background: currentHighlightNum === currentIndex ? "orange" : "yellow" }}>
@@ -155,30 +142,38 @@ const SearchApp = () => {
                     (prevIndex - 1 + hits) % hits
                 );
             }
-            // console.log(currentIndex, direction, "after")
         }
     }
+
+
 
     // currentIndexの変更を検知して実行。
     // handleArrowClickにconsole.log(currentIndex, direction, "after")を入れても
     // currentIndexの更新が完了する前に実行されるため、useEffectで実行
-    useEffect(() => {
-        console.log(currentIndex, "after");
-    }, [currentIndex]);
+    // useEffect(() => {
+    //     console.log(currentIndex, "after");
+    // }, [currentIndex]);
+
+
 
     useEffect(() => {
         // コンポーネントがマウントされた後に操作を行う
         if (containerRef.current) {
             const targetWord = containerRef.current.querySelector(`#word-${currentIndex}`);
             if (targetWord) {
+                console.log(targetWord)
+                console.log(containerRef.current.scrollTop + targetWord.offsetTop)
                 containerRef.current.scrollTo({
-                    top: containerRef.current.scrollTop + targetWord.offsetTop,
+                    // top: containerRef.current.scrollTop + targetWord.offsetTop,
+                    top: targetWord.offsetTop - containerRef.current.offsetTop,
                     behavior: "smooth",
                 });
             }
             // console.log(containerRef.current)
         }
     }, [currentIndex]);
+
+
 
     return (
         <div style={{ textAlign: "center", marginTop: "50px" }}>

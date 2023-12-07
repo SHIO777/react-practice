@@ -5,6 +5,7 @@ import ColorList from "./6/ColorList";
 import colorData from "./6/color-data.json";
 import AddColorForm from "./6/AddColorForm";
 import { v4 } from "uuid";
+import SearchApp from "./6/SearchApp";
 
 // 6.1
 // export default function App() {
@@ -103,12 +104,28 @@ export default function App() {
     setColors(newColors);
   };
 
-  const [update, setUpdate] = useState(false);
+  // function UpdateButton() {
+  //   const [state, setState] = useState(false);
 
+  //   return (
+  //     <button onClick={() => setState((prevState) => !prevState)}>
+  //       {state ? 'update' : '!!!update'}
+  //     </button>
+  //   )
+  // }
+
+  const [state, setState] = useState(false);
+  const buttonText = state ? 'update' : 'not update';
+  const toggleUpdate = () => {
+    setState((prevState) => !prevState);
+  };
+  
+  
   return (
     <>
-      <button onClick={() => setUpdate((prevState) => !prevState)}>
-        {update ? 'update' : '!update'}
+      {/* <UpdateButton/> */}
+      {/* <button onClick={toggleUpdate}>
+        {buttonText}
       </button>
       
       <AddColorForm onNewColor={createColor} />
@@ -116,7 +133,8 @@ export default function App() {
         colors={colors}
         onRemoveColor={removeColor}
         onRateColor={rateColor}
-      />
+      /> */}
+      <SearchApp/>
     </>
   );
 }

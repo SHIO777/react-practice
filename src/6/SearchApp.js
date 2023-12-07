@@ -1,92 +1,74 @@
-import React, { useState } from 'react';
+import React, {useState} from "react"
 
 const SearchApp = () => {
-  const [input, setInput] = useState('');
-  const [hits, setHits] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
+    const [input, setInput] = useState("")
+    const [hits, setHits] = useState(0)
+    const [currentIndex, setCurrentIndex] = useState(0)
 
-    const data = [
-    'Hello my name is',
-    // 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    // 'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    // 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-    // 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
-    // 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-  ];
+    const data = ["Hello my name is is",
+                    "hello Hello",]
 
-  const handleInputChange = (e) => {
-    const inputValue = e.target.value;
-    setInput(inputValue);
-    searchHits(inputValue);
-  };
-
-  const searchHits = (query) => {
-    const newHits = [];
-    data.forEach((text, index) => {
-      const matches = [...text.matchAll(query)].map((match) => match.index);
-      if (matches.length > 0) {
-        newHits.push({ index, matches });
-      }
-    });
-    setHits(newHits);
-    setCurrentIndex(0);
-  };
-
-  const handleArrowClick = (direction) => {
-    if (hits.length > 0) {
-      let newIndex;
-      if (direction === 'next') {
-        newIndex = (currentIndex + 1) % hits.length;
-      } else {
-        newIndex = (currentIndex - 1 + hits.length) % hits.length;
-      }
-      setCurrentIndex(newIndex);
+    const handleInputChange = (e) => {
+        const inputValue = e.target.value
+        setInput(inputValue);
+        searchHits(inputValue);
     }
-  };
 
-  return (
-      <div style={{ textAlign: "center", margin: "50px" }}>
-      <input
-        type="text"
-        placeholder="Search..."
-        value={input}
-        onChange={handleInputChange}
-      />
-      <div>
-        <p>Results: {hits.length}</p>
-        {hits.length > 0 && (
-          <p>
-            Hit {currentIndex + 1} of {hits.length}
-          </p>
-        )}
-      </div>
-      <div>
-        {data.map((text, index) => (
-          <div key={index}>
-            {hits.map((hit, hitIndex) => (
-              <span key={hitIndex}>
-                {index === hit.index && (
-                  <>
-                    {text.slice(
-                      hit.matches[currentIndex],
-                      hit.matches[currentIndex] + input.length
-                    )}
-                  </>
-                )}
-              </span>
-            ))}
-            {text}
-          </div>
-        ))}
-      </div>
-      {hits.length > 1 && (
+    const searchHits = (query) => {
+        let hitsNum = 0;
+        data.forEach((text, index) => {
+            if (query !== "") {
+                hitsNum = hitsNum + [...text.matchAll(query)].length;
+            }
+        
+        //   console.log(...text.matchAll(query))
+        //   const matches = [...text.matchAll(query)].map((match) => match.index)
+        //   if (matches.length > 0) {
+        //     newHits.push({index, matches})
+        //   }
+        })
+
+        console.log(hitsNum)
+        setHits(hitsNum)
+        setCurrentIndex(0)
+    }
+
+    const highlightText = (text, query) => {
+        if (!query) return text;
+        const parts = text.split(new RegExp(`(${query})`, "gi"))
+        console.log(parts)
+        return parts.map((part, index) => 
+            part.toLowerCase() === query.toLowerCase() ? (
+                <mark key={index}>{part}</mark>
+            ) : (
+                    part
+            )
+        )
+    }
+
+    return (
+        <div style={{textAlign: "center", margin: "50px"}}>
+        <input
+            type="text"
+            placeholder="Search..."
+            value={input}
+            onChange={handleInputChange}
+        />
         <div>
-          <button onClick={() => handleArrowClick('prev')}>Previous</button>
-          <button onClick={() => handleArrowClick('next')}>Next</button>
+            {/* <p>Results: {hits}</p> */}
+            {hits > 0 && (
+            <p>
+                Hits: {currentIndex + 1}/{hits}
+            </p>
+            )}
         </div>
-      )}
-    </div>
-  );
-};
+        <div>
+            {data.map((text, index) => (
+            <div key={index}>{highlightText(text, input)}</div>
+            ))}
+        </div>
+        </div>
+    )
+}
 
-export default SearchApp;
+export default SearchApp

@@ -81,27 +81,6 @@ const SearchApp = () => {
         "hello Hello",
     ];
 
-    // const data = [
-    //     "Hello my name is is",
-    //     'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    //     'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    //     'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    //     'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    //             'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    //     'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    //             'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    //     'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    //             'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    //     'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    //     'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-    //     'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
-    //     'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-    //     "a",
-    //     "b",
-    //     "c",
-    //     "hello Hello",
-    // ];
-
     const handleInputChange = (e) => {
         const inputValue = e.target.value
         setInput(inputValue);
@@ -128,29 +107,22 @@ const SearchApp = () => {
 
 
     var highlightNum = 0;
+    var currentHighlightNum = 0;
 
     const highlightText = (text, query) => {
         if (!query) return text;
-
-        {data.map((text, index1) => (
-            <div key={index1}>{highlightText(text, input)}</div>
-        ))}
 
         const parts = text.split(new RegExp(`(${query})`, "gi"))
 
         return parts.map((part, index) => {
             const isHighlightWord = part.toLowerCase() === query.toLowerCase();
             if (isHighlightWord) {
+                currentHighlightNum = highlightNum
                 highlightNum += 1;
             }
 
-            if (isHighlightWord && highlightNum - 1 === currentIndex) {
+            if (isHighlightWord && currentHighlightNum === currentIndex) {
                 // スクロール
-                // containerRef.current &&
-                // containerRef.current.scrollTo({
-                //     top: containerRef.current.scrollTop + containerRef.current.querySelector(`#word-${index}`).offsetTop,
-                //     behavior: "smooth",
-                // });
                 if (containerRef.current) {
                     const targetWord = containerRef.current.querySelector(`#word-${currentIndex}`);
                     if (targetWord) {
@@ -164,22 +136,14 @@ const SearchApp = () => {
 
             if (isHighlightWord) {
                 return (
-                    <mark key={index} id={`word-${index}`} style={{ background: (highlightNum - 1) === currentIndex ? "orange" : "yellow" }}>
-                    {part}
+                    <mark key={index} id={`word-${currentHighlightNum}`} style={{ background: currentHighlightNum === currentIndex ? "orange" : "yellow" }}>
+                        {part}
                     </mark >
                 )
             } else {
                 return part
             }
-
-            // return isHighlightWord ? (
-            //     <mark key={index} id={`word-${index}`} style={{ background: (highlightNum-1) === currentIndex ? "orange" : "yellow" }}>
-            //     {part}
-            //     </mark>
-            //     ) : (
-            //     part
-            //     );
-        });
+        })
     }
 
     const handleArrowClick = (direction) => {
@@ -191,8 +155,16 @@ const SearchApp = () => {
                     (prevIndex - 1 + hits) % hits
                 );
             }
+            // console.log(currentIndex, direction, "after")
         }
     }
+
+    // currentIndexの変更を検知して実行。
+    // handleArrowClickにconsole.log(currentIndex, direction, "after")を入れても
+    // currentIndexの更新が完了する前に実行されるため、useEffectで実行
+    useEffect(() => {
+        console.log(currentIndex, "after");
+    }, [currentIndex]);
 
     useEffect(() => {
         // コンポーネントがマウントされた後に操作を行う
@@ -204,7 +176,7 @@ const SearchApp = () => {
                     behavior: "smooth",
                 });
             }
-            console.log(containerRef.current)
+            // console.log(containerRef.current)
         }
     }, [currentIndex]);
 
@@ -233,7 +205,7 @@ const SearchApp = () => {
                 ))}
             </div>
             {/* <div ref={containerRef} style={{ overflowY: "scroll", maxHeight: "500px" }}>
-                <highlightText text={data} query={input}/>
+                {highlightText(data, input)}
             </div> */}
         </div> 
     )

@@ -131,6 +131,11 @@ const SearchApp = () => {
 
     const highlightText = (text, query) => {
         if (!query) return text;
+
+        {data.map((text, index1) => (
+            <div key={index1}>{highlightText(text, input)}</div>
+        ))}
+
         const parts = text.split(new RegExp(`(${query})`, "gi"))
 
         return parts.map((part, index) => {
@@ -157,15 +162,23 @@ const SearchApp = () => {
                 }
             }
 
-            return isHighlightWord ? (
-                <mark key={index} id={`word-${index}`} style={{ background: (highlightNum-1) === currentIndex ? "orange" : "yellow" }}>
-                {/* {currentIndex},
-                {highlightNum} */}
-                {part}
-            </mark>
-            ) : (
-            part
-            );
+            if (isHighlightWord) {
+                return (
+                    <mark key={index} id={`word-${index}`} style={{ background: (highlightNum - 1) === currentIndex ? "orange" : "yellow" }}>
+                    {part}
+                    </mark >
+                )
+            } else {
+                return part
+            }
+
+            // return isHighlightWord ? (
+            //     <mark key={index} id={`word-${index}`} style={{ background: (highlightNum-1) === currentIndex ? "orange" : "yellow" }}>
+            //     {part}
+            //     </mark>
+            //     ) : (
+            //     part
+            //     );
         });
     }
 
@@ -191,6 +204,7 @@ const SearchApp = () => {
                     behavior: "smooth",
                 });
             }
+            console.log(containerRef.current)
         }
     }, [currentIndex]);
 
@@ -214,15 +228,12 @@ const SearchApp = () => {
                 )}
             </div>
             <div ref={containerRef} style={{ overflowY: "scroll", maxHeight: "500px" }}>
-            {/* <div ref={containerRef} style={{ overflowY: "scroll" }}> */}
                 {data.map((text, index) => (
                 <div key={index}>{highlightText(text, input)}</div>
                 ))}
             </div>
-            {/* <div>
-                {data.map((text, index) => (
-                <div key={index}>{highlightText(text, input)}</div>
-                ))}
+            {/* <div ref={containerRef} style={{ overflowY: "scroll", maxHeight: "500px" }}>
+                <highlightText text={data} query={input}/>
             </div> */}
         </div> 
     )

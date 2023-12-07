@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from "react"
+import React, {useState, useRef, useEffect, useMemo, useCallback} from "react"
 
 const SearchApp = () => {
     const [input, setInput] = useState("")
@@ -6,7 +6,7 @@ const SearchApp = () => {
     const [currentIndex, setCurrentIndex] = useState(0)
     const containerRef = useRef(null);
 
-    const data = [
+    const data = useMemo(() => [
         "Hello my name is is",
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
         'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
@@ -79,15 +79,11 @@ const SearchApp = () => {
         "b",
         "c",
         "hello Hello",
-    ];
+    ], []);
 
-    const handleInputChange = (e) => {
-        const inputValue = e.target.value
-        setInput(inputValue);
-        searchHits(inputValue);
-    }
 
-    const searchHits = (query) => {
+
+    const searchHits = useCallback((query) => {
         let hitsNum = 0;
 
         if (!query) return setHits(0);
@@ -102,14 +98,20 @@ const SearchApp = () => {
             })
         })
         setHits(hitsNum)
-    }
+    }, [data])
 
+
+    const handleInputChange = useCallback((e) => {
+        const inputValue = e.target.value
+        setInput(inputValue);
+        searchHits(inputValue);
+    }, [searchHits])
 
 
     var highlightNum = 0;
     var currentHighlightNum = 0;
 
-    const highlightText = (text, query) => {
+    const highlightText = useCallback((text, query) => {
         if (!query) return text;
 
         const parts = text.split(new RegExp(`(${query})`, "gi"))
@@ -131,9 +133,9 @@ const SearchApp = () => {
                 return part
             }
         })
-    }
+    }, [currentIndex])
 
-    const handleArrowClick = (direction) => {
+    const handleArrowClick = useCallback((direction) => {
         if (hits > 1) {
             if (direction === "next") {
                 setCurrentIndex((prevIndex) => (prevIndex + 1) % hits);
@@ -143,16 +145,8 @@ const SearchApp = () => {
                 );
             }
         }
-    }
+    }, [hits])
 
-
-
-    // currentIndexの変更を検知して実行。
-    // handleArrowClickにconsole.log(currentIndex, direction, "after")を入れても
-    // currentIndexの更新が完了する前に実行されるため、useEffectで実行
-    // useEffect(() => {
-    //     console.log(currentIndex, "after");
-    // }, [currentIndex]);
 
 
 
@@ -161,15 +155,11 @@ const SearchApp = () => {
         if (containerRef.current) {
             const targetWord = containerRef.current.querySelector(`#word-${currentIndex}`);
             if (targetWord) {
-                console.log(targetWord)
-                console.log(containerRef.current.scrollTop + targetWord.offsetTop)
                 containerRef.current.scrollTo({
-                    // top: containerRef.current.scrollTop + targetWord.offsetTop,
                     top: targetWord.offsetTop - containerRef.current.offsetTop,
                     behavior: "smooth",
                 });
             }
-            // console.log(containerRef.current)
         }
     }, [currentIndex]);
 
@@ -199,9 +189,6 @@ const SearchApp = () => {
                 <div key={index}>{highlightText(text, input)}</div>
                 ))}
             </div>
-            {/* <div ref={containerRef} style={{ overflowY: "scroll", maxHeight: "500px" }}>
-                {highlightText(data, input)}
-            </div> */}
         </div> 
     )
 }
